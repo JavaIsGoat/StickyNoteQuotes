@@ -42,25 +42,6 @@ const StyledNote = styled.div<{
   }
 `;
 
-const AddButton = styled.button`
-  position: fixed;
-  top: 20px;
-  right: 20px;
-  padding: 10px 20px;
-  font-size: 16px;
-  border-radius: 25px;
-  border: none;
-  background: #4caf50;
-  color: white;
-  cursor: pointer;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-  z-index: 1000;
-
-  &:hover {
-    background: #45a049;
-  }
-`;
-
 const DropArea = styled.div`
   position: fixed;
   top: 0;
@@ -73,8 +54,7 @@ const DropArea = styled.div`
 const initialQuotes = [
   "Your manager is cash, mentor is credit, networking is investments.",
   "Effort that is not recognized is effort that is not done",
-  "This is the best banana bread I’ve ever had",
-  "bitches",
+  "So long Hong Kong, catch me for a tea in London with my subtle British accent!",
 ];
 
 const colors = [
@@ -103,20 +83,6 @@ const App: React.FC = () => {
     setNotes(initialNotes);
   }, []);
 
-  const addNote = () => {
-    const newNote: Note = {
-      id: notes.length,
-      text: "Double click to edit...",
-      color: colors[Math.floor(Math.random() * colors.length)],
-      rotation: Math.random() * 10 - 5,
-      position: {
-        x: window.innerWidth / 2 - 100,
-        y: window.innerHeight / 2 - 100,
-      },
-    };
-    setNotes([...notes, newNote]);
-  };
-
   const updateNoteText = (id: number, newText: string) => {
     setNotes(
       notes.map((note) => (note.id === id ? { ...note, text: newText } : note))
@@ -133,8 +99,6 @@ const App: React.FC = () => {
         overflow: "hidden",
       }}
     >
-      <AddButton onClick={addNote}>Add Note</AddButton>
-
       {notes.map((note) => (
         <StyledNote
           key={note.id}
