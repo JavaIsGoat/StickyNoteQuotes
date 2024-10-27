@@ -74,6 +74,7 @@ const initialQuotes = [
   "Your manager is cash, mentor is credit, networking is investments.",
   "Effort that is not recognized is effort that is not done",
   "This is the best banana bread I’ve ever had",
+  "bitches",
 ];
 
 const colors = [
