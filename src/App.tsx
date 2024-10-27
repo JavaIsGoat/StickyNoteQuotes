@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import styles from "./App.module.css";
-
+import { quotes } from "./quotes";
 interface Note {
   id: number;
   text: string;
@@ -8,13 +8,6 @@ interface Note {
   rotation: number;
   position: { x: number; y: number };
 }
-
-const initialQuotes = [
-  "Your manager is cash, mentor is credit, networking is investments.",
-  "Effort that is not recognized is effort that is not done",
-  "So long Hong Kong, catch me for a tea in London with my subtle British accent!",
-];
-
 const colors = [
   "#feff9c", // yellow
   "#ff7eb9", // pink
@@ -24,18 +17,43 @@ const colors = [
   "#98ff98", // mint green
 ];
 
+// Fisher-Yates shuffle algorithm
+const shuffleArray = <T,>(array: T[]): T[] => {
+  const newArray = [...array];
+  for (let i = newArray.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
+  }
+  return newArray;
+};
+
 const App: React.FC = () => {
   const [notes, setNotes] = useState<Note[]>([]);
 
   useEffect(() => {
-    const initialNotes: Note[] = initialQuotes.map((quote, index) => ({
+    // Get header height to avoid placing notes over it
+    const headerHeight =
+      document
+        .querySelector(`.${styles.HeaderContainer}`)
+        ?.getBoundingClientRect().height || 200;
+    const safeMargin = 50; // Additional margin below header
+    const minY = headerHeight + safeMargin;
+
+    // Shuffle the quotes
+    const shuffledQuotes = shuffleArray(quotes);
+
+    // Calculate available space for notes
+    const availableWidth = window.innerWidth - 300; // 300px for note width + margin
+    const availableHeight = window.innerHeight - minY - 200; // 200px for note height
+
+    const initialNotes: Note[] = shuffledQuotes.map((quote, index) => ({
       id: index,
       text: quote,
       color: colors[Math.floor(Math.random() * colors.length)],
       rotation: Math.random() * 10 - 5,
       position: {
-        x: 50 + Math.random() * (window.innerWidth - 300),
-        y: 50 + Math.random() * (window.innerHeight - 300),
+        x: 50 + Math.random() * availableWidth,
+        y: minY + Math.random() * availableHeight,
       },
     }));
     setNotes(initialNotes);
@@ -47,11 +65,10 @@ const App: React.FC = () => {
       <div className={styles.HeaderContainer}>
         <h1 className={styles.Title}>Pareen Khanna</h1>
         <h1 className={styles.Title} style={{ fontSize: "3rem" }}>
-          {" "}
           और उसके
         </h1>
         <h1 className={styles.Title} style={{ fontSize: "2rem" }}>
-          인용 부호{" "}
+          인용 부호
         </h1>
       </div>
 
@@ -92,6 +109,16 @@ const App: React.FC = () => {
           const offset_x = parseInt(e.dataTransfer.getData("offset_x"));
           const offset_y = parseInt(e.dataTransfer.getData("offset_y"));
 
+          // Get header height to prevent dropping notes over it
+          const headerHeight =
+            document
+              .querySelector(`.${styles.HeaderContainer}`)
+              ?.getBoundingClientRect().height || 200;
+          const safeMargin = 50;
+          const minY = headerHeight + safeMargin;
+
+          const newY = Math.max(minY, e.clientY - offset_y);
+
           setNotes(
             notes.map((note) =>
               note.id === id
@@ -99,7 +126,7 @@ const App: React.FC = () => {
                     ...note,
                     position: {
                       x: e.clientX - offset_x,
-                      y: e.clientY - offset_y,
+                      y: newY,
                     },
                   }
                 : note
