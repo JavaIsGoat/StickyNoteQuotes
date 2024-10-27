@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import styles from "./App.module.css";
 import { quotes } from "./quotes";
+
 interface Note {
   id: number;
   text: string;
@@ -8,6 +9,7 @@ interface Note {
   rotation: number;
   position: { x: number; y: number };
 }
+
 const colors = [
   "#feff9c", // yellow
   "#ff7eb9", // pink
@@ -17,7 +19,6 @@ const colors = [
   "#98ff98", // mint green
 ];
 
-// Fisher-Yates shuffle algorithm
 const shuffleArray = <T,>(array: T[]): T[] => {
   const newArray = [...array];
   for (let i = newArray.length - 1; i > 0; i--) {
@@ -30,33 +31,43 @@ const shuffleArray = <T,>(array: T[]): T[] => {
 const App: React.FC = () => {
   const [notes, setNotes] = useState<Note[]>([]);
 
-  useEffect(() => {
-    // Get header height to avoid placing notes over it
+  const calculateNoteLayout = () => {
     const headerHeight =
       document
         .querySelector(`.${styles.HeaderContainer}`)
         ?.getBoundingClientRect().height || 200;
-    const safeMargin = 50; // Additional margin below header
+    const safeMargin = window.innerWidth < 768 ? 30 : 50;
     const minY = headerHeight + safeMargin;
 
-    // Shuffle the quotes
     const shuffledQuotes = shuffleArray(quotes);
 
-    // Calculate available space for notes
-    const availableWidth = window.innerWidth - 300; // 300px for note width + margin
-    const availableHeight = window.innerHeight - minY - 200; // 200px for note height
+    // Adjust note spacing for different screen sizes
+    const noteWidth = window.innerWidth < 768 ? 150 : 200;
+    const noteMargin = window.innerWidth < 768 ? 10 : 20;
+
+    const availableWidth = window.innerWidth - (noteWidth + noteMargin * 2);
+    const availableHeight =
+      window.innerHeight - minY - (noteWidth + noteMargin * 2);
 
     const initialNotes: Note[] = shuffledQuotes.map((quote, index) => ({
       id: index,
       text: quote,
       color: colors[Math.floor(Math.random() * colors.length)],
-      rotation: Math.random() * 10 - 5,
+      rotation:
+        Math.random() * (window.innerWidth < 768 ? 6 : 10) -
+        (window.innerWidth < 768 ? 3 : 5),
       position: {
-        x: 50 + Math.random() * availableWidth,
+        x: noteMargin + Math.random() * availableWidth,
         y: minY + Math.random() * availableHeight,
       },
     }));
     setNotes(initialNotes);
+  };
+
+  useEffect(() => {
+    calculateNoteLayout();
+    window.addEventListener("resize", calculateNoteLayout);
+    return () => window.removeEventListener("resize", calculateNoteLayout);
   }, []);
 
   return (
@@ -64,10 +75,16 @@ const App: React.FC = () => {
       <div className={styles.BackgroundContainer} />
       <div className={styles.HeaderContainer}>
         <h1 className={styles.Title}>Pareen Khanna</h1>
-        <h1 className={styles.Title} style={{ fontSize: "3rem" }}>
+        <h1
+          className={styles.Title}
+          style={{ fontSize: "clamp(1.5rem, 4.5vw, 3rem)" }}
+        >
           और उसके
         </h1>
-        <h1 className={styles.Title} style={{ fontSize: "2rem" }}>
+        <h1
+          className={styles.Title}
+          style={{ fontSize: "clamp(1rem, 3vw, 2rem)" }}
+        >
           인용 부호
         </h1>
       </div>
@@ -76,6 +93,15 @@ const App: React.FC = () => {
         <div
           key={note.id}
           className={styles.Note}
+          draggable
+          onDragStart={(e) => {
+            const rect = e.currentTarget.getBoundingClientRect();
+            const offset_x = e.clientX - rect.left;
+            const offset_y = e.clientY - rect.top;
+            e.dataTransfer.setData("text/plain", note.id.toString());
+            e.dataTransfer.setData("offset_x", offset_x.toString());
+            e.dataTransfer.setData("offset_y", offset_y.toString());
+          }}
           style={{
             left: `${note.position.x}px`,
             top: `${note.position.y}px`,
@@ -96,12 +122,11 @@ const App: React.FC = () => {
           const offset_x = parseInt(e.dataTransfer.getData("offset_x"));
           const offset_y = parseInt(e.dataTransfer.getData("offset_y"));
 
-          // Get header height to prevent dropping notes over it
           const headerHeight =
             document
               .querySelector(`.${styles.HeaderContainer}`)
               ?.getBoundingClientRect().height || 200;
-          const safeMargin = 50;
+          const safeMargin = window.innerWidth < 768 ? 30 : 50;
           const minY = headerHeight + safeMargin;
 
           const newY = Math.max(minY, e.clientY - offset_y);

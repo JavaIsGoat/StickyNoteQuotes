@@ -20,7 +20,7 @@
 
 .Title {
   font-family: "Playfair Display", "Georgia", serif;
-  font-size: 4rem;
+  font-size: clamp(2rem, 6vw, 4rem);
   font-weight: 700;
   color: white;
   text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.3),
@@ -51,19 +51,19 @@
 .ContentWrapper {
   position: relative;
   min-height: 100vh;
-  padding: 20px;
-  overflow: hidden;
+  padding: clamp(10px, 2vw, 20px);
+  overflow: auto;
 }
 
 .Note {
   position: absolute;
-  width: 200px;
-  min-height: 200px;
-  padding: 20px;
+  width: clamp(150px, 30vw, 200px);
+  min-height: clamp(150px, 30vw, 200px);
+  padding: clamp(10px, 2vw, 20px);
   box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.1);
   cursor: move;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
-  font-size: 18px;
+  font-size: clamp(14px, 2.5vw, 18px);
   font-family: "Comic Sans", "Comic Sans MS", "Chalkboard",
     "ChalkboardSE-Regular", sans-serif;
   display: flex;
@@ -73,6 +73,7 @@
   border-radius: 2px;
   white-space: pre-wrap;
   z-index: 1;
+  margin: 10px;
 }
 
 .Note:hover {
@@ -86,4 +87,15 @@
   right: 0;
   bottom: 0;
   z-index: 0;
+}
+
+@media (max-width: 768px) {
+  .Title {
+    margin-bottom: 10px;
+  }
+
+  .HeaderContainer {
+    padding: 10px 0;
+    margin-bottom: 20px;
+  }
 }
