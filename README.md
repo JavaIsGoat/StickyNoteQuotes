@@ -1,4 +1,4 @@
-## Add quotes
+## Add more quotes
 
 1. Edit the [quotes file](https://github.com/JavaIsGoat/StickyNoteQuotes/blob/main/src/quotes.ts) directly on Github
 2. Commit change directly to main branch
