@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import styled, { keyframes } from "styled-components";
+import styles from "./App.module.css";
 
 interface Note {
   id: number;
@@ -8,105 +8,6 @@ interface Note {
   rotation: number;
   position: { x: number; y: number };
 }
-
-const sunsetAnimation = keyframes`
-  0% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
-  100% {
-    background-position: 0% 50%;
-  }
-`;
-
-const HeaderContainer = styled.div`
-  position: relative;
-  text-align: center;
-  padding: 20px 0;
-  margin-bottom: 40px;
-  z-index: 1;
-`;
-
-const Title = styled.h1`
-  font-family: "Playfair Display", "Georgia", serif;
-  font-size: 4rem;
-  font-weight: 700;
-  color: white;
-  text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.3),
-    -2px -2px 8px rgba(255, 255, 255, 0.1);
-  margin: 0;
-  letter-spacing: 2px;
-`;
-
-const BackgroundContainer = styled.div`
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: linear-gradient(
-    -45deg,
-    #ff7e5f,
-    #feb47b,
-    #ff9966,
-    #ff5e62,
-    #ff9966
-  );
-  background-size: 400% 400%;
-  animation: ${sunsetAnimation} 15s ease infinite;
-  z-index: 0;
-`;
-
-const ContentWrapper = styled.div`
-  position: relative;
-  min-height: 100vh;
-  padding: 20px;
-  overflow: hidden;
-`;
-
-const StyledNote = styled.div<{
-  color: string;
-  rotation: number;
-  left: number;
-  top: number;
-}>`
-  position: absolute;
-  left: ${(props) => props.left}px;
-  top: ${(props) => props.top}px;
-  width: 200px;
-  min-height: 200px;
-  padding: 20px;
-  background: ${(props) => props.color};
-  box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.1);
-  transform: rotate(${(props) => props.rotation}deg);
-  cursor: move;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  font-size: 18px;
-  font-family: "Comic Sans MS", cursive;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  border-radius: 2px;
-  white-space: pre-wrap;
-  z-index: 1;
-
-  &:hover {
-    transform: rotate(${(props) => props.rotation}deg) scale(1.05);
-    box-shadow: 8px 8px 15px rgba(0, 0, 0, 0.2);
-  }
-`;
-
-const DropArea = styled.div`
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  z-index: 0;
-`;
 
 const initialQuotes = [
   "Your manager is cash, mentor is credit, networking is investments.",
@@ -147,21 +48,29 @@ const App: React.FC = () => {
   };
 
   return (
-    <ContentWrapper>
-      <BackgroundContainer />
-      <HeaderContainer>
-        <Title>Pareen Khanna</Title>
-        <Title style={{ fontSize: "3rem" }}> और उसके</Title>
-        <Title style={{ fontSize: "2rem" }}>인용 부호 </Title>
-      </HeaderContainer>
+    <div className={styles.ContentWrapper}>
+      <div className={styles.BackgroundContainer} />
+      <div className={styles.HeaderContainer}>
+        <h1 className={styles.Title}>Pareen Khanna</h1>
+        <h1 className={styles.Title} style={{ fontSize: "3rem" }}>
+          {" "}
+          और उसके
+        </h1>
+        <h1 className={styles.Title} style={{ fontSize: "2rem" }}>
+          인용 부호{" "}
+        </h1>
+      </div>
 
       {notes.map((note) => (
-        <StyledNote
+        <div
           key={note.id}
-          color={note.color}
-          rotation={note.rotation}
-          left={note.position.x}
-          top={note.position.y}
+          className={styles.Note}
+          style={{
+            left: `${note.position.x}px`,
+            top: `${note.position.y}px`,
+            background: note.color,
+            transform: `rotate(${note.rotation}deg)`,
+          }}
           onDoubleClick={() => {
             const newText = prompt("Edit note:", note.text);
             if (newText !== null) {
@@ -183,10 +92,11 @@ const App: React.FC = () => {
           }}
         >
           {note.text}
-        </StyledNote>
+        </div>
       ))}
 
-      <DropArea
+      <div
+        className={styles.DropArea}
         onDragOver={(e) => e.preventDefault()}
         onDrop={(e) => {
           e.preventDefault();
@@ -209,7 +119,7 @@ const App: React.FC = () => {
           );
         }}
       />
-    </ContentWrapper>
+    </div>
   );
 };
 

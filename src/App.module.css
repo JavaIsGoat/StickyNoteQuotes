@@ -1,0 +1,88 @@
+@keyframes SunsetAnimation {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.HeaderContainer {
+  position: relative;
+  text-align: center;
+  padding: 20px 0;
+  margin-bottom: 40px;
+  z-index: 1;
+}
+
+.Title {
+  font-family: "Playfair Display", "Georgia", serif;
+  font-size: 4rem;
+  font-weight: 700;
+  color: white;
+  text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.3),
+    -2px -2px 8px rgba(255, 255, 255, 0.1);
+  margin: 0;
+  letter-spacing: 2px;
+}
+
+.BackgroundContainer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    -45deg,
+    #ff7e5f,
+    #feb47b,
+    #ff9966,
+    #ff5e62,
+    #ff9966
+  );
+  background-size: 400% 400%;
+  animation: SunsetAnimation 15s ease infinite;
+  z-index: 0;
+}
+
+.ContentWrapper {
+  position: relative;
+  min-height: 100vh;
+  padding: 20px;
+  overflow: hidden;
+}
+
+.Note {
+  position: absolute;
+  width: 200px;
+  min-height: 200px;
+  padding: 20px;
+  box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.1);
+  cursor: move;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  font-size: 18px;
+  font-family: "Comic Sans MS", cursive;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  border-radius: 2px;
+  white-space: pre-wrap;
+  z-index: 1;
+}
+
+.Note:hover {
+  box-shadow: 8px 8px 15px rgba(0, 0, 0, 0.2);
+}
+
+.DropArea {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 0;
+}
