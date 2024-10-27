@@ -82,19 +82,6 @@ const App: React.FC = () => {
             background: note.color,
             transform: `rotate(${note.rotation}deg)`,
           }}
-          draggable={true}
-          onDragStart={(e) => {
-            const rect = e.currentTarget.getBoundingClientRect();
-            e.dataTransfer.setData("text/plain", note.id.toString());
-            e.dataTransfer.setData(
-              "offset_x",
-              (e.clientX - rect.left).toString()
-            );
-            e.dataTransfer.setData(
-              "offset_y",
-              (e.clientY - rect.top).toString()
-            );
-          }}
         >
           {note.text}
         </div>
