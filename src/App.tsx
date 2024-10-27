@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 
 interface Note {
   id: number;
@@ -8,6 +8,63 @@ interface Note {
   rotation: number;
   position: { x: number; y: number };
 }
+
+const sunsetAnimation = keyframes`
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+`;
+
+const HeaderContainer = styled.div`
+  position: relative;
+  text-align: center;
+  padding: 20px 0;
+  margin-bottom: 40px;
+  z-index: 1;
+`;
+
+const Title = styled.h1`
+  font-family: "Playfair Display", "Georgia", serif;
+  font-size: 4rem;
+  font-weight: 700;
+  color: white;
+  text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.3),
+    -2px -2px 8px rgba(255, 255, 255, 0.1);
+  margin: 0;
+  letter-spacing: 2px;
+`;
+
+const BackgroundContainer = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    -45deg,
+    #ff7e5f,
+    #feb47b,
+    #ff9966,
+    #ff5e62,
+    #ff9966
+  );
+  background-size: 400% 400%;
+  animation: ${sunsetAnimation} 15s ease infinite;
+  z-index: 0;
+`;
+
+const ContentWrapper = styled.div`
+  position: relative;
+  min-height: 100vh;
+  padding: 20px;
+  overflow: hidden;
+`;
 
 const StyledNote = styled.div<{
   color: string;
@@ -90,15 +147,14 @@ const App: React.FC = () => {
   };
 
   return (
-    <div
-      style={{
-        minHeight: "100vh",
-        background: "#f0f0f0",
-        padding: "20px",
-        position: "relative",
-        overflow: "hidden",
-      }}
-    >
+    <ContentWrapper>
+      <BackgroundContainer />
+      <HeaderContainer>
+        <Title>Pareen Khanna</Title>
+        <Title style={{ fontSize: "3rem" }}> और उसके</Title>
+        <Title style={{ fontSize: "2rem" }}>인용 부호 </Title>
+      </HeaderContainer>
+
       {notes.map((note) => (
         <StyledNote
           key={note.id}
@@ -153,7 +209,7 @@ const App: React.FC = () => {
           );
         }}
       />
-    </div>
+    </ContentWrapper>
   );
 };
 
