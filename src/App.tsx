@@ -41,12 +41,6 @@ const App: React.FC = () => {
     setNotes(initialNotes);
   }, []);
 
-  const updateNoteText = (id: number, newText: string) => {
-    setNotes(
-      notes.map((note) => (note.id === id ? { ...note, text: newText } : note))
-    );
-  };
-
   return (
     <div className={styles.ContentWrapper}>
       <div className={styles.BackgroundContainer} />
@@ -70,12 +64,6 @@ const App: React.FC = () => {
             top: `${note.position.y}px`,
             background: note.color,
             transform: `rotate(${note.rotation}deg)`,
-          }}
-          onDoubleClick={() => {
-            const newText = prompt("Edit note:", note.text);
-            if (newText !== null) {
-              updateNoteText(note.id, newText);
-            }
           }}
           draggable={true}
           onDragStart={(e) => {

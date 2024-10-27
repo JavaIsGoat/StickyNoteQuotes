@@ -64,7 +64,8 @@
   cursor: move;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   font-size: 18px;
-  font-family: "Comic Sans MS", cursive;
+  font-family: "Comic Sans", "Comic Sans MS", "Chalkboard",
+    "ChalkboardSE-Regular", sans-serif;
   display: flex;
   align-items: center;
   justify-content: center;
